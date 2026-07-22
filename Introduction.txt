@@ -1,6 +1,7 @@
 Hello, my name is Darcy. I am studying a Master of Geospatial Data Science.
 Hi, my name is Lucious. I am studying a Bachelor of Data Science majoring in Business Analytics.
-Hello, my name is Nico i am doing a major in biology and a minor in statistics and am free most wednesdays, thursdays and until 2pm on fridays.
+Hello, my name is Nico i am doing a major in biology and a minor in statistics 
 
+Nico: I am free most wednesdays, thursdays and until 2pm on fridays.
 LUCIOUS --> I work Sunday, Monday and Thursday.
 Darcy: I am essentially available all day Tuesday, Thursday and Friday.
