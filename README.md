@@ -11,12 +11,12 @@ Alyssa Thompson
 
 ### Source
 
-Originated from AirBnB, made available on InsideAirBnB. Data from New Zealand in the 12 months before 19 June 2026.
+AirBnB listings scraped and made available by InsideAirBnB. Data from New Zealand in the 12 months before 19 June 2026.
 
 ### Columns
 
 | Name | Meaning |
-|--------------------------|----------------------------------------------|
+|------------------------------------|------------------------------------|
 | `id` | Airbnb's unique identifier for the listing |
 | `name` | Name of the listing |
 | `host_id` | Airbnb's unique identifier for the host/user |
