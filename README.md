@@ -18,7 +18,7 @@ Under Public Domain and to the extent possible under law, InsideAirBnB creator M
 ### Columns
 
 | Name | Meaning |
-|------------------------------------|------------------------------------|
+|----|----|
 | `id` | Airbnb's unique identifier for the listing |
 | `name` | Name of the listing |
 | `host_id` | Airbnb's unique identifier for the host/user |
