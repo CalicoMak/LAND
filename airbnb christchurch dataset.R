@@ -1,6 +1,8 @@
+# Installing necessary libraries
 library(readr)
 library(dplyr)
 library(lubridate)
+library(ggplot2)
 
 # Setup date metadata
 dates <- c("2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06")
@@ -34,3 +36,35 @@ table(airbnb$month_year)     #tables to have a better look at categorical variab
 
 write_csv(airbnb, "../data_d3/listings_chch.csv")
 
+# Reproducing workflow from Deliverable 2
+
+# Calculating and plotting how long ago the last review was (days) 
+
+# Filtering columns to keep only id, name, last_review
+review_data <- airbnb %>%
+  select(id, name, last_review)
+
+# Changing 'last_review' string to Date (YYYY-MM-DD)
+review_data <- review_data %>%
+  mutate(last_review = ymd(last_review))
+
+# Adding column with scrape date
+review_data <- review_data %>%
+  mutate(scrape_date = ymd("2026-06-19"))
+
+# Calculating difference between scrape_date and last_review
+review_data <- review_data %>%
+  mutate(days_since_last_review = as.numeric(scrape_date - last_review))
+
+# Removing missing values and negative day counts
+review_data <- review_data %>%
+  filter(!is.na(days_since_last_review), days_since_last_review >= 0)
+
+# Create histogram
+ggplot(review_data, aes(x = days_since_last_review)) +
+  geom_histogram(binwidth = 30, color = "white") +
+  labs(
+    title = "Distribution of Days Since Last Review",
+    x = "Days Since Last Review",
+    y = "Number of Listings"
+  )
