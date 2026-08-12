@@ -6,7 +6,8 @@ most_reviews <- read_csv("../data_d3/listings_chch.csv") %>%
   slice_max(order_by = number_of_reviews, prop = 0.1)
 
 
-summary_top <- summarise(
+summary_top <- most_reviews %>%
+  summarise(
     count = n(),
     min_num_reviews = min(number_of_reviews, na.rm = TRUE),
     mean_num_reviews = mean(number_of_reviews, na.rm = TRUE),
