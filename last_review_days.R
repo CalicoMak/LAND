@@ -11,19 +11,34 @@ airbnb <- read_csv("../data_d3/listings_chch.csv")
 
 # Filtering columns to keep only id, name, last_review
 review_data <- airbnb %>%
-  select(id, name, last_review)
+  select(id, name, last_review, month_year)
 
 # Changing 'last_review' string to Date (YYYY-MM-DD)
 review_data <- review_data %>%
   mutate(last_review = ymd(last_review))
 
-# Adding column with scrape date
-review_data <- review_data %>%
-  mutate(scrape_date = ymd("2026-06-19"))
 
-# Calculating difference between scrape_date and last_review
-review_data <- review_data %>%
-  mutate(days_since_last_review = as.numeric(scrape_date - last_review))
+scrape_lookup <- tibble(
+  month_year = c("October 2025", "November 2025", "December 2025", "January 2026", "February 2026", 
+                          "March 2026", "April 2026", "May 2026", "June 2026"), 
+  scrape_date = as.Date(c(
+    "2025-10-05", 
+  "2025-11-25", 
+  "2025-12-11", 
+  "2026-01-16", 
+  "2026-02-13", 
+  "2026-03-17", 
+  "2026-04-16", 
+  "2026-05-23", 
+  "2026-06-19"
+)))
+
+
+review_data <- review_data %>% 
+  left_join(scrape_lookup, by = "month_year") %>% 
+  mutate(
+    days_since_last_review = as.numeric(scrape_date - last_review)
+  )
 
 # Removing missing values and negative day counts
 review_data <- review_data %>%
