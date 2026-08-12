@@ -1,8 +1,6 @@
 # Installing necessary libraries
 library(readr)
 library(dplyr)
-library(lubridate)
-library(ggplot2)
 
 # Setup date metadata
 dates <- c("2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06")
