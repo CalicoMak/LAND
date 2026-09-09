@@ -18,7 +18,7 @@ Under Public Domain and to the extent possible under law, InsideAirBnB creator M
 ### Columns
 
 | Name | Meaning |
-|----|----|
+|------------------------------------|------------------------------------|
 | `id` | Airbnb's unique identifier for the listing |
 | `name` | Name of the listing |
 | `host_id` | Airbnb's unique identifier for the host/user |
@@ -37,3 +37,25 @@ Under Public Domain and to the extent possible under law, InsideAirBnB creator M
 | `availability_365` | The availability of the listing 365 days in the future as determined by the calendar. Note a listing may not be available because it has been booked by a guest or blocked by the host. |
 | `number_of_reviews_ltm` | The number of reviews the listing has (in the last 12 months) |
 | `license` | The licence/permit/registration number |
+
+## Tenancy Services Report 
+
+### Source 
+This data has been made available by the The Ministry of Business, Innovation and Employment. Data from New Zealand January 2020- April 2026.\
+License Type: Creative Commons 3.0 New Zealand License. 
+
+### Columns 
+| Name | Meaning | 
+|------------------------------------|------------------------------------|
+| TimeFrame | Date of data collection | 
+| Location Id | SA2 ID from StatsNZ | 
+| Dwelling Type | Type of dwelling | 
+| Number of Beds | Number of beds in the dwelling | 
+| Total Bonds | Total number of bonds at that location Id for that quarter | 
+| Active Bonds | Number of active bonds | 
+| Closed Bonds | Number of closed bonds at that location ID for that quarter | 
+| Median Rent | Average rent price  | 
+| Geometric Mean Rent | -- | 
+| Upper Quartile Rent | -- | 
+| Lower Quartile Rent | -- | 
+| Log Std Dev Weekly Rent | -- | 
