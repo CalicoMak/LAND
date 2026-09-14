@@ -11,7 +11,7 @@ Alyssa Thompson
 
 ### Source
 
-AirBnB listings scraped and made available by InsideAirBnB. Data from New Zealand in the 12 months before 19 June 2026.\
+AirBnB listings scraped and made available by InsideAirBnB. Data from New Zealand in the 9 months before 19 June 2026.\
 License Type: Creative Commons Attribution 4.0 International License (CC BY).\
 Under Public Domain and to the extent possible under law, InsideAirBnB creator Murray Cox has waived all copyright and related or neighboring rights to Inside Airbnb Data. This work is published from: United States.
 
