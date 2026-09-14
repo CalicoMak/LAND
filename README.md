@@ -38,24 +38,36 @@ Under Public Domain and to the extent possible under law, InsideAirBnB creator M
 | `number_of_reviews_ltm` | The number of reviews the listing has (in the last 12 months) |
 | `license` | The licence/permit/registration number |
 
-## Tenancy Services Report 
+### Cleaning
 
-### Source 
+**Columns removed before d4:**\
+Any columns unrelated to the connection between airbnb data and tenancy data for price and available property information were removed.
+
+- `host_id` and `host_name` (both provide unnecessary information about the host that will not be needed when combining airbnb data with tenancy data).
+- `neighbourhood_group` and `neighbourhood` (the area data at this level was not needed as we kept `latitude` and `longitude` columns).
+- `number_of_reviews`, `last_review`, `reviews_per_month`, and `number_of_reviews_ltm` (nothing to compare this data to in the tenancy dataset.).
+- `calculated_host_listings_count` (nothing to compare this to in the tenancy dataset).
+- `license` (this data consisted only of Na values so didn't show anything).\
+
+## Tenancy Services Report
+
+### Source
+
 This data has been made available by the The Ministry of Business, Innovation and Employment. Data from New Zealand January 2020- April 2026.\
-License Type: Creative Commons 3.0 New Zealand License. 
+License Type: Creative Commons 3.0 New Zealand License.
 
-### Columns 
-| Name | Meaning | 
+### Columns
+
+| Name | Meaning |
 |------------------------------------|------------------------------------|
-| TimeFrame | Date of data collection | 
-| Location Id | SA2 ID from StatsNZ | 
-| Dwelling Type | Type of dwelling | 
-| Number of Beds | Number of beds in the dwelling | 
-| Total Bonds | Total number of bonds at that location Id for that quarter | 
-| Active Bonds | Number of active bonds | 
-| Closed Bonds | Number of closed bonds at that location ID for that quarter | 
-| Median Rent | Average rent price  | 
-| Geometric Mean Rent | -- | 
-| Upper Quartile Rent | -- | 
-| Lower Quartile Rent | -- | 
-| Log Std Dev Weekly Rent | -- | 
+| `TimeFrame` | Date of data collection |
+| `Location Id` | SA2 ID from StatsNZ |
+| `Dwelling Type` | Type of dwelling |
+| `Number of Beds` | Number of beds in the dwelling |
+| `Total Bonds` | Total number of bonds at that location Id for that quarter |
+| `Active Bonds` | Number of active bonds |
+| `Median Rent` | Average rent price |
+| `Geometric Mean Rent` | The n-th root of the average multiplied together |
+| `Upper Quartile Rent` | Top 75th percentile of the dataset |
+| `Lower Quartile Rent` | Lower 25th percentile of the dataset |
+| `Log Std Dev Weekly Rent` | Log of the standard deviation of weekly rent |
