@@ -11,9 +11,8 @@ Alyssa Thompson
 
 ### Source
 
-AirBnB listings scraped and made available by InsideAirBnB. Data from New Zealand in the 9 months before 19 June 2026.\
-License Type: Creative Commons Attribution 4.0 International License (CC BY).\
-Under Public Domain and to the extent possible under law, InsideAirBnB creator Murray Cox has waived all copyright and related or neighboring rights to Inside Airbnb Data. This work is published from: United States.
+AirBnB listings scraped and made available by InsideAirBnB. Data from New Zealand in the 9 months before 19 June 2026. Under Public Domain and to the extent possible under law, InsideAirBnB creator Murray Cox has waived all copyright and related or neighboring rights to Inside Airbnb Data. This work is published from: United States.\
+Licence: Creative Commons Attribution 4.0 International License (CC BY)
 
 ### Columns
 
@@ -41,33 +40,63 @@ Under Public Domain and to the extent possible under law, InsideAirBnB creator M
 ### Cleaning
 
 **Columns removed before d4:**\
-Any columns unrelated to the connection between airbnb data and tenancy data for price and available property information were removed.
+Any columns unrelated to the connection between AirBnB data and tenancy data for price and available property information were removed.
 
-- `host_id` and `host_name` (both provide unnecessary information about the host that will not be needed when combining airbnb data with tenancy data).
+- `host_id` and `host_name` (both provide unnecessary information about the host that will not be needed when combining AirBnB data with tenancy data).
 - `neighbourhood_group` and `neighbourhood` (the area data at this level was not needed as we kept `latitude` and `longitude` columns).
 - `number_of_reviews`, `last_review`, `reviews_per_month`, and `number_of_reviews_ltm` (nothing to compare this data to in the tenancy dataset.).
 - `calculated_host_listings_count` (nothing to compare this to in the tenancy dataset).
 - `license` (this data consisted only of Na values so didn't show anything).\
 
-## Tenancy Services Report
+## Quarterly Rental Bond Dataset
 
 ### Source
 
-This data has been made available by the The Ministry of Business, Innovation and Employment. Data from New Zealand January 2020- April 2026.\
-License Type: Creative Commons 3.0 New Zealand License.
+This data has been made available by the The Ministry of Business, Innovation and Employment through Tenancy Services. Data from New Zealand each quarter from January 2020 to April 2026.\
+Licence: Creative Commons Attribution 3.0 New Zealand License (CC BY)
 
 ### Columns
 
 | Name | Meaning |
 |------------------------------------|------------------------------------|
-| `TimeFrame` | Date of data collection |
-| `Location Id` | SA2 ID from StatsNZ |
-| `Dwelling Type` | Type of dwelling |
-| `Number of Beds` | Number of beds in the dwelling |
-| `Total Bonds` | Total number of bonds at that location Id for that quarter |
+| `TimeFrame` | Starting day of the quarter to the bond data were collected |
+| `Location Id` | SA2-2019 ID from Stats NZ |
+| `Dwelling Type` | ALL \| [ Apartment \| Boarding House \| Flat \| House \| Room ] |
+| `Number of Beds` | ALL \| Number of beds in the dwelling |
+| `Total Bonds` | Total number of bonds |
 | `Active Bonds` | Number of active bonds |
-| `Median Rent` | Average rent price |
+| `Closed Bonds` | Number of bonds closed that quarter |
+| `Median Rent` | Median weekly rent in NZD |
 | `Geometric Mean Rent` | The n-th root of the average multiplied together |
-| `Upper Quartile Rent` | Top 75th percentile of the dataset |
-| `Lower Quartile Rent` | Lower 25th percentile of the dataset |
+| `Upper Quartile Rent` | Synthetic 75th percentile assuming lognormal distribution of weekly rent in NZD |
+| `Lower Quartile Rent` | Synthetic 25th percentile assuming lognormal distribution of weekly rent in NZD |
 | `Log Std Dev Weekly Rent` | Log of the standard deviation of weekly rent |
+
+### Cleaning
+
+#### Rows Retained
+
+- `TimeFrame` between `2025-10-01` and `2026-04-01`, i.e. the three quarters that align with the AirBnB data.
+- `Location Id` in Christchurch City (according to SA2-2019 Higher Geographies), matching the same operation on the AirBnB data, which uses the exact same Christchurch City boundary. Removes all other SA2's, as well as `NULL` and `-99`, which cannot be qualified.
+- `Dwelling Type` that is not `ALL`; no aggregation along `Dwelling Type` as this column will be retained.
+- `Number of Beds` that is `ALL`; only aggregation along `Number of Beds` as this column will be removed. Also removes `NA` entries, which are unquantified values that overlap with `ALL`.
+
+Note: As `ALL` indicates aggregation, keeping both actual values and `ALL` would result in double-counting bonds.
+
+#### Columns Dropped
+
+- `Number of Beds`: AirBnB dataset has no equivalent so no comparison can be made.
+
+## Statistical Area 2 2019 Higher Geographies
+
+### Source
+
+Relates 2019 Statistical Area 2 units to higher geographic units. Downloaded from the Stats NZ Geographic Data Service.\
+Licence: Creative Commons Attribution 4.0 International (CC BY)
+
+### Columns
+
+| Name | Description |
+|-----------------------|-------------------------------------------------|
+| SA22019_V1_00 | SA2-19 ID number |
+| TA2019_V1_00_NAME | Name of the Territorial Authority inside which the given SA2-19 lies |
