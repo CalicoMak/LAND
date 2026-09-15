@@ -10,7 +10,7 @@ airbnb <- read_csv("../data_d3/listings_chch.csv")
 # Keeping the particular columns
 airbnb_clean <- airbnb %>%
   select(id, name, room_type, latitude, longitude, room_type, price,
-         minimum_nights, availability_365, month_year)
+         minimum_nights, availability_365, timeframe)
 
 # Removing the na values from minimum_nights
 airbnb_clean <- airbnb_clean %>%

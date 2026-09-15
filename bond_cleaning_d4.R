@@ -24,10 +24,10 @@ bonds.filtered <- bonds %>%
   filter(
     TimeFrame >= as.Date("2025-10-01"),
     TimeFrame <= as.Date("2026-04-01"),
-    `Location Id` %in% sa2ref.chch#,
-    # `Dwelling Type` != "ALL",
-    # `Number Of Beds` == "ALL"
-  ) #%>%
-  # select(-`Number Of Beds`)
+    `Location Id` %in% sa2ref.chch,
+    `Dwelling Type` != "ALL",
+    `Number Of Beds` == "ALL"
+  ) %>%
+  select(-`Number Of Beds`)
 
 write_csv(bonds.filtered, file.path(data.dir, "bonds_chch.csv"))
