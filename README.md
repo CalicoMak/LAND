@@ -17,7 +17,7 @@ Licence: Creative Commons Attribution 4.0 International License (CC BY)
 ### Columns
 
 | Name | Meaning |
-|------------------------------------|------------------------------------|
+|----|----|
 | `id` | Airbnb's unique identifier for the listing |
 | `name` | Name of the listing |
 | `host_id` | Airbnb's unique identifier for the host/user |
@@ -58,7 +58,7 @@ Licence: Creative Commons Attribution 3.0 New Zealand License (CC BY)
 ### Columns
 
 | Name | Meaning |
-|------------------------------------|------------------------------------|
+|----|----|
 | `TimeFrame` | Starting day of the quarter to the bond data were collected |
 | `Location Id` | SA2-2019 ID from Stats NZ |
 | `Dwelling Type` | ALL \| [ Apartment \| Boarding House \| Flat \| House \| Room ] |
