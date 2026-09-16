@@ -17,7 +17,7 @@ Licence: Creative Commons Attribution 4.0 International License (CC BY)
 ### Columns
 
 | Name | Meaning |
-|----|----|
+|------------------------------------|------------------------------------|
 | `id` | Airbnb's unique identifier for the listing |
 | `name` | Name of the listing |
 | `host_id` | Airbnb's unique identifier for the host/user |
@@ -58,7 +58,7 @@ Licence: Creative Commons Attribution 3.0 New Zealand License (CC BY)
 ### Columns
 
 | Name | Meaning |
-|----|----|
+|------------------------------------|------------------------------------|
 | `TimeFrame` | Starting day of the quarter to the bond data were collected |
 | `Location Id` | SA2-2019 ID from Stats NZ |
 | `Dwelling Type` | ALL \| [ Apartment \| Boarding House \| Flat \| House \| Room ] |
@@ -77,7 +77,6 @@ Licence: Creative Commons Attribution 3.0 New Zealand License (CC BY)
 #### Rows Retained
 
 - `TimeFrame` between `2025-10-01` and `2026-04-01`, i.e. the three quarters that align with the AirBnB data.
-- `Location Id` in Christchurch City (according to SA2-2019 Higher Geographies), matching the same operation on the AirBnB data, which uses the exact same Christchurch City boundary. Removes all other SA2's, as well as `NULL` and `-99`, which cannot be qualified.
 - `Dwelling Type` that is not `ALL`; no aggregation along `Dwelling Type` as this column will be retained.
 - `Number of Beds` that is `ALL`; only aggregation along `Number of Beds` as this column will be removed. Also removes `NA` entries, which are unquantified values that overlap with `ALL`.
 
@@ -86,17 +85,3 @@ Note: As `ALL` indicates aggregation, keeping both actual values and `ALL` would
 #### Columns Dropped
 
 - `Number of Beds`: AirBnB dataset has no equivalent so no comparison can be made.
-
-## Statistical Area 2 2019 Higher Geographies
-
-### Source
-
-Relates 2019 Statistical Area 2 units to higher geographic units. Downloaded from the Stats NZ Geographic Data Service.\
-Licence: Creative Commons Attribution 4.0 International (CC BY)
-
-### Columns
-
-| Name | Description |
-|----|----|
-| SA22019_V1_00 | SA2-19 ID number |
-| TA2019_V1_00_NAME | Name of the Territorial Authority inside which the given SA2-19 lies |
