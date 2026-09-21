@@ -26,11 +26,15 @@ listings <- listings %>%
 # 4. Create SQLite database file inside the data folder
 con <- dbConnect(RSQLite::SQLite(), file.path(data.dir, "rentals.db"))
 
-# 5. Write data frames into SQLite tables
+# 5. Forcing listing and bond data to be characters for attaching by similar (calculations already done)
+bonds$TimeFrame <- as.character(as.Date(bonds$TimeFrame))
+listings$quarter <- as.character(listings$quarter)  
+
+# 6. Write data frames into SQLite tables
 dbWriteTable(con, "airbnb", listings, overwrite = TRUE)
 dbWriteTable(con, "bonds", bonds, overwrite = TRUE)
 
-# 6. SQL Join Query using exact column names
+# 7. SQL Join Query using exact column names
 sql_join <- "
 WITH bonds_agg AS (
     SELECT
