@@ -9,7 +9,7 @@ data.dir <- "../data_d3"
 
 # 2. Read CSV files using file.path()
 listings <- read_csv(file.path(data.dir, "listings_chch_codes.csv"))
-bonds <- read_csv(file.path(data.dir, "bonds_chch.csv"))
+bonds <- read_csv(file.path(data.dir, "bonds_cleaned.csv"))
 
 # 3. Ensure matching data types for joining
 listings$sa2_code <- as.character(listings$sa2_code) 
