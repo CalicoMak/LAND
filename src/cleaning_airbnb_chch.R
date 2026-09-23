@@ -2,7 +2,7 @@ library(readr)
 library(dplyr)
 library(lubridate)
 
-data.dir <- "../data_d3"
+data.dir <- "../data_LAND"
 
 # Setup date metadata
 dates <- c("2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06")
@@ -22,22 +22,17 @@ for (i in seq_along(dates)) {
 # Combine into single data frame
 airbnb <- bind_rows(data.list)
 
-write_csv(airbnb, file.path(data.dir, "listings_chch.csv"))
 
 
+# Keeping the particular columns
+airbnb_clean <- airbnb %>%
+  select(id, name, room_type, latitude, longitude, room_type, price,
+         minimum_nights, availability_365, timeframe)
 
+# Removing the na values from minimum_nights
+airbnb_clean <- airbnb_clean %>%
+  filter(!is.na(minimum_nights))
 
-## Review the new data
-
-summary(airbnb)    #summary including max, min, mean, categories
-
-colSums(is.na(airbnb))    #better for just seeing where the NAs are
-
-airbnb %>%
-  summarise(across(where(is.numeric), \(x) sd(x, na.rm = TRUE)))    #standard deviation for numeric variables
-
-
-table(airbnb$room_type)
-table(airbnb$neighbourhood)
-table(airbnb$month_year)     #tables to have a better look at categorical variables and see where data came from
+# Save the cleaned file
+write_csv(airbnb_clean, file.path(data.dir, "listings_chch.csv"))
 
