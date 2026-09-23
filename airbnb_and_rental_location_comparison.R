@@ -3,7 +3,7 @@ library(readr)
 
 # Load data
 airbnb_comparison <- read_csv("../data_d3/listings_chch_codes.csv")
-rentals_comparison <- read_csv("../data_d3/bonds_chch.csv")
+rentals_comparison <- read_csv("../data_d3/bonds_cleaned.csv")
 
 # -----------------------------
 # Prepare Airbnb data
