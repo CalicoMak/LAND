@@ -1,7 +1,7 @@
 library(readr)
 library(dplyr)
 
-data.dir <- "../data_d3"
+data.dir <- "../data_LAND"
 
 bonds <- read_csv(file.path(data.dir, "Detailed-Quarterly-Tenancy-Q1-2020-Q3-2026.csv"))
 
