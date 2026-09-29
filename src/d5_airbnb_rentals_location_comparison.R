@@ -1,102 +1,113 @@
-library(tidyverse)
-library(readr)
+library(dplyr)
+library(ggplot2)
+library(scales)
 
-# Load data
-airbnb_comparison <- read_csv("../data_d3/listings_chch_codes.csv")
-rentals_comparison <- read_csv("../data_d3/bonds_chch.csv")
+# Read joined data
+joined <- read.csv("../data_LAND/joined_airbnb_tenancy.csv")
 
-# -----------------------------
-# Prepare Airbnb data
-# -----------------------------
-
-airbnb_comparison <- airbnb_comparison %>%
+# Make sure variables have the correct types
+joined <- joined %>%
   mutate(
-    timeframe = as.Date(timeframe),
-    sa2_code = as.character(sa2_code)
+    quarter = as.Date(quarter),
+    a_month = as.Date(a_month),
+    sa2_code = as.character(sa2_code),
+    a_id = as.character(a_id)
   )
 
-# Dates matching the rental dataset
-quarter_dates <- as.Date(c(
-  "2025-10-01",
-  "2026-01-01",
-  "2026-04-01"
-))
 
-# Keep Airbnb observations from matching dates
-airbnb_quarter <- airbnb_comparison %>%
-  filter(timeframe %in% quarter_dates)
+# ---------------------------------------------------------
+# 1. Count UNIQUE Airbnb listings per quarter + SA2
+# ---------------------------------------------------------
 
-# Count unique Airbnb listings per location and date
-airbnb_counts <- airbnb_quarter %>%
-  group_by(timeframe, sa2_code) %>%
+airbnb_counts <- joined %>%
+  distinct(quarter, sa2_code, a_id) %>%
+  group_by(quarter, sa2_code) %>%
   summarise(
-    airbnb_count = n_distinct(id),
+    airbnb_listings = n(),
     .groups = "drop"
   )
 
-# -----------------------------
-# Prepare rental data
-# -----------------------------
 
-rentals_comparison <- rentals_comparison %>%
-  mutate(
-    TimeFrame = as.Date(TimeFrame),
-    `Location Id` = as.character(`Location Id`)
-  )
+# ---------------------------------------------------------
+# 2. Get ONE active-bond value per quarter + SA2
+# ---------------------------------------------------------
 
-# Sum active rental bonds across dwelling types and bed categories
-rental_counts <- rentals_comparison %>%
-  group_by(TimeFrame, `Location Id`) %>%
-  summarise(
-    rental_count = sum(`Active Bonds`),
-    .groups = "drop"
+tenancy_counts <- joined %>%
+  select(
+    quarter,
+    sa2_code,
+    t_bonds_active
   ) %>%
-  rename(
-    timeframe = TimeFrame,
-    sa2_code = `Location Id`
+  distinct() %>%
+  group_by(quarter, sa2_code) %>%
+  summarise(
+    active_bonds = first(na.omit(t_bonds_active)),
+    .groups = "drop"
   )
 
-# -----------------------------
-# Join datasets
-# -----------------------------
 
-comparison <- inner_join(
-  airbnb_counts,
-  rental_counts,
-  by = c("timeframe", "sa2_code")
-) %>%
+# ---------------------------------------------------------
+# 3. Join Airbnb and tenancy counts
+# ---------------------------------------------------------
+
+rental_comparison <- airbnb_counts %>%
+  left_join(
+    tenancy_counts,
+    by = c("quarter", "sa2_code")
+  )
+
+
+# ---------------------------------------------------------
+# 4. Calculate Airbnb listings as % of active bonds
+# ---------------------------------------------------------
+
+rental_comparison <- rental_comparison %>%
   mutate(
-    difference = airbnb_count - rental_count,
-    airbnb_percentage =
-      airbnb_count / (airbnb_count + rental_count) * 100
+    airbnb_percent_of_active_bonds =
+      (airbnb_listings / active_bonds) * 100
   )
 
-# View results
-print(comparison)
 
-# -----------------------------
-# April 2026 results
-# -----------------------------
+# ---------------------------------------------------------
+# 5. Select the top 15 SA2s in each quarter
+# ---------------------------------------------------------
 
-april_2026 <- comparison %>%
-  filter(timeframe == as.Date("2026-04-01")) %>%
-  arrange(desc(airbnb_count))
+top_areas <- rental_comparison %>%
+  filter(!is.na(airbnb_percent_of_active_bonds)) %>%
+  group_by(quarter) %>%
+  slice_max(
+    order_by = airbnb_percent_of_active_bonds,
+    n = 15,
+    with_ties = FALSE
+  ) %>%
+  ungroup()
 
-print(april_2026)
 
-# -----------------------------
-# Plot
-# -----------------------------
+# ---------------------------------------------------------
+# 6. Make the graph
+# ---------------------------------------------------------
 
 ggplot(
-  april_2026,
-  aes(x = rental_count, y = airbnb_count)
+  top_areas,
+  aes(
+    x = reorder(sa2_code, airbnb_percent_of_active_bonds),
+    y = airbnb_percent_of_active_bonds
+  )
 ) +
-  geom_point() +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~ quarter, scales = "free_y") +
   labs(
-    title = "Airbnb and long-term rental properties by SA2",
-    subtitle = "Christchurch, April 2026",
-    x = "Active long-term rental properties",
-    y = "Airbnb listings"
+    title = "Airbnb listings relative to active rental bonds",
+    subtitle = "Top 15 SA2 areas in each quarter",
+    x = "SA2 code",
+    y = "Airbnb listings as % of active bonds"
   ) +
-  theme_minimal()
+  scale_y_continuous(
+    labels = label_percent(scale = 1)
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    axis.text.y = element_text(size = 8)
+  )
