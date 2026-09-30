@@ -3,7 +3,7 @@ library(readr)
 
 
 # Load concatenated Christchurch dataset
-df <- read_csv("../data_d3/listings_chch.csv")
+df <- read_csv("../data_LAND/listings_chch.csv")
 
 # Remove missing prices
 df_clean <- df[!is.na(df$price), ]

@@ -4,6 +4,8 @@
 library(dplyr)
 library(readr)
 
+data.dir <- " ../data_LAND"
+
 # Reading in the Airbnb file
 listings <- read_csv(file.path(data.dir, "listings_chch_codes.csv"))
 # Filtering only by Chch central (code 326600)
