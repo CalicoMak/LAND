@@ -3,11 +3,14 @@ library(RSQLite)
 library(readr)
 library(dplyr)
 library(lubridate)
+library(ggplot2)
 
 data.dir <- "../data_LAND"
 
 airbnb <- read_csv(file.path(data.dir, "listings_chch_codes.csv"))
 tenancy <- read_csv(file.path(data.dir, "tenancy_cleaned.csv"))
+
+tenancy$`Median Rent` <- as.numeric(tenancy$`Median Rent`)
 
 # Ensure SA2 code is the same type for joining
 airbnb$sa2_code <- as.character(airbnb$sa2_code) 
@@ -56,3 +59,5 @@ write.csv(joined_data, file.path(data.dir, "joined_airbnb_tenancy.csv"), row.nam
 
 dbDisconnect(con)
 
+nrow(airbnb)
+nrow(joined_data)
