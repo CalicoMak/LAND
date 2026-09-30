@@ -7,7 +7,7 @@ library(lubridate)
 library(ggplot2)
 
 # Reading in the concatenated chch .csv
-airbnb <- read_csv("../data_d3/listings_chch.csv")
+airbnb <- read_csv("../data_LAND/listings_chch.csv")
 
 # Filtering columns to keep only id, name, last_review
 review_data <- airbnb %>%

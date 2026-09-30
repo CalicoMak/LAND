@@ -2,7 +2,7 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 
-most_reviews <- read_csv("../data_d3/listings_chch.csv") %>%
+most_reviews <- read_csv("../data_LAND/listings_chch.csv") %>%
   slice_max(order_by = number_of_reviews, prop = 0.1)
 
 
