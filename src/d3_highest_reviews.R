@@ -1,6 +1,12 @@
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(yaml)
+
+config <- read_yaml("config.yaml")
+
+most_reviews <- read_rds(file.path(config$out_dir,"listings_chch_cleaned.rds")) %>%
+  slice_max(order_by = number_of_reviews, prop = 0.1)
 
 most_reviews <- read_csv("../data_LAND/listings_chch.csv") %>%
   slice_max(order_by = number_of_reviews, prop = 0.1)
