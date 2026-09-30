@@ -9,7 +9,7 @@ config <- read_yaml("config.yaml")
 data.list <- vector("list", length(config$airbnb_months))
 
 # Loop over files
-for (i in seq_along(dates)) {
+for (i in seq_along(config$airbnb_months)) {
   filepath <- file.path(config$data_dir, paste0("listings_", dates[i], ".csv"))
   
   data.list[[i]] <- read_csv(filepath, show_col_types = FALSE) %>%
