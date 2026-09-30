@@ -16,4 +16,4 @@ bonds.filtered <- bonds %>%
   ) %>%
   select(-`Dwelling Type`, -`Number Of Beds`)
 
-write_rds(bonds.filtered, file.path(config$data_dir, "tenancy_cleaned.rds"))
+write_rds(bonds.filtered, file.path(config$out_dir, "tenancy_cleaned.rds"))
