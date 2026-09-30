@@ -6,6 +6,8 @@ library(readr)
 
 # Reading in the Airbnb file
 listings <- read_csv(file.path(data.dir, "listings_chch_codes.csv"))
+# Reading in Joined data 
+joined_data <- read_csv(file.path(data.dir, "joined_airbnb_tenancy.csv"))
 # Filtering only by Chch central (code 326600)
 chch_central <- listings %>% filter(sa2_code == 326600)
 # Calculating median using median function
@@ -14,18 +16,20 @@ median(chch_central$price, na.rm = TRUE)
 
 
 # Calculating 'craziest' gap between short and long term rental prices.
+# We defined short term as airbnb and long term as tenancy because majority of airbnb data (>94%) is <28 days. 
 
-# joined_data comes from the SQL script
+# Reading in the 'geographic-areas-table-2023' 
 geo <- read_csv(file.path(data.dir, "geographic-areas-table-2023.csv")) %>%
   select(SA22023_code, SA22023_name, SA32023_code, SA32023_name) %>%
   distinct(SA22023_code, .keep_all = TRUE) %>%
   mutate(SA22023_code = as.character(SA22023_code),
          SA32023_code = as.character(SA32023_code))
 
-#
+# Merging the sa2/sa3 with our joined airbnb and tenancy data
 merged <- joined_data %>%
-  mutate(bond_nightly_equiv = bond_median_weekly_rent / 7,
-         gap = airbnb_price_per_night - bond_nightly_equiv) %>%
+  mutate(sa2_code = as.character(sa2_code),
+         t_nightly_equiv = t_rent_median / 7,
+         gap = a_nightlyprice - t_nightly_equiv) %>%
   filter(!is.na(gap)) %>% # Making sure there's no na data
   left_join(geo, by = c("sa2_code" = "SA22023_code"))
 
