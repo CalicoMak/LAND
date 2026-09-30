@@ -1,9 +1,10 @@
 library(readr)
 library(dplyr)
+library(yaml)
 
-data.dir <- "../data_LAND"
+config <- read_yaml("config.yaml")
 
-bonds <- read_csv(file.path(data.dir, "Detailed-Quarterly-Tenancy-Q1-2020-Q3-2026.csv"))
+bonds <- read_csv(file.path(config$data_dir, "Detailed-Quarterly-Tenancy-Q1-2020-Q3-2026.csv"))
 
 # Filter by time and ensure aggregation over both dwelling type and number of beds
 bonds.filtered <- bonds %>%
@@ -15,4 +16,4 @@ bonds.filtered <- bonds %>%
   ) %>%
   select(-`Dwelling Type`, -`Number Of Beds`)
 
-write_csv(bonds.filtered, file.path(data.dir, "tenancy_cleaned.csv"))
+write_rds(bonds.filtered, file.path(config$data_dir, "tenancy_cleaned.rds"))
