@@ -4,11 +4,12 @@ library(readr)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(arrow)
 library(yaml)
 
 config <- read_yaml("config.yaml")
 
-airbnb <- read_rds(file.path(config$out_dir, "listings_chch_codes.rds"))
+airbnb <- read_parquet(file.path(config$out_dir, "airbnb_chch_codes.parquet"))
 tenancy <- read_rds(file.path(config$out_dir, "tenancy_cleaned.rds"))
 
 # tenancy$`Median Rent` <- as.numeric(tenancy$`Median Rent`)
