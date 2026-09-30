@@ -5,11 +5,8 @@ library(yaml)
 
 config <- read_yaml("config.yaml")
 
-# Setup date metadata
-dates <- c("2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06")
-
 # Initialise list to store data frames
-data.list <- vector("list", length(dates))
+data.list <- vector("list", length(config$airbnb_months))
 
 # Loop over files
 for (i in seq_along(dates)) {
@@ -23,6 +20,7 @@ for (i in seq_along(dates)) {
 # Combine into single data frame
 airbnb <- bind_rows(data.list)
 
+write_rds(airbnb, file.path(config$out, "listings_chch.rds"))
 
 
 # Keeping the particular columns
@@ -35,4 +33,4 @@ airbnb_clean <- airbnb_clean %>%
   filter(!is.na(minimum_nights))
 
 # Save the cleaned file
-write_rds(airbnb_clean, file.path(config$out, "listings_chch.rds"))
+write_rds(airbnb_clean, file.path(config$out, "listings_chch_cleaned.rds"))
