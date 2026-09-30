@@ -8,13 +8,15 @@ config <- read_yaml("config.yaml")
 # Initialise list to store data frames
 data.list <- vector("list", length(config$airbnb_months))
 
+airbnb.months <- config$airbnb_months
+
 # Loop over files
-for (i in seq_along(dates)) {
-  filepath <- file.path(config$data_dir, paste0("listings_", dates[i], ".csv"))
+for (i in seq_along(airbnb.months)) {
+  filepath <- file.path(config$data_dir, paste0("listings_", airbnb.months[i], ".csv"))
   
   data.list[[i]] <- read_csv(filepath, show_col_types = FALSE) %>%
     filter(neighbourhood_group == "Christchurch City") %>%
-    mutate(timeframe = ym(dates[i]))
+    mutate(timeframe = ym(airbnb.months[i]))
 }
 
 # Combine into single data frame
