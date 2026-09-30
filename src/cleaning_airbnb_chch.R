@@ -1,8 +1,9 @@
 library(readr)
 library(dplyr)
 library(lubridate)
+library(yaml)
 
-data.dir <- "../data_LAND"
+config <- read_yaml("config.yaml")
 
 # Setup date metadata
 dates <- c("2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06")
@@ -12,7 +13,7 @@ data.list <- vector("list", length(dates))
 
 # Loop over files
 for (i in seq_along(dates)) {
-  filepath <- file.path(data.dir, paste0("listings_", dates[i], ".csv"))
+  filepath <- file.path(config$data_dir, paste0("listings_", dates[i], ".csv"))
   
   data.list[[i]] <- read_csv(filepath, show_col_types = FALSE) %>%
     filter(neighbourhood_group == "Christchurch City") %>%
@@ -34,5 +35,4 @@ airbnb_clean <- airbnb_clean %>%
   filter(!is.na(minimum_nights))
 
 # Save the cleaned file
-write_csv(airbnb_clean, file.path(data.dir, "listings_chch.csv"))
-
+write_rds(airbnb_clean, file.path(config$out, "listings_chch.rds"))

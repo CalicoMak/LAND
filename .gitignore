@@ -36,3 +36,5 @@ rsconnect/
 .positai
 .RDataTmp1
 .RDataTmp2
+# intermediate outputs
+out/
