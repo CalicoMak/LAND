@@ -7,7 +7,7 @@ library(ggplot2)
 library(arrow)
 library(yaml)
 
-config <- read_yaml("config.yaml")
+config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
 airbnb <- read_parquet(file.path(config$out_dir, "airbnb_chch_codes.parquet"))
 tenancy <- read_rds(file.path(config$out_dir, "tenancy_cleaned.rds"))
@@ -57,7 +57,7 @@ LEFT JOIN tenancy t
 
 joined_data <- dbGetQuery(con, sql_join)
 
-write_rds(joined_data, file.path(config$out_dir, "joined_airbnb_tenancy.rds"), row.names = FALSE)
+write_rds(joined_data, file.path(config$out_dir, "joined_airbnb_tenancy.rds"))
 
 dbDisconnect(con)
 

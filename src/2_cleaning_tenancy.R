@@ -3,7 +3,7 @@ library(dplyr)
 library(lubridate)
 library(yaml)
 
-config <- read_yaml("config.yaml")
+config <- read_yaml("config.yaml", readLines.warn = FALSE)
 tenancy <- read_csv(file.path(config$data_dir, "Detailed-Quarterly-Tenancy-Q1-2020-Q3-2026.csv"))
 
 # Define parameters
