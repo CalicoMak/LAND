@@ -3,13 +3,14 @@
 
 library(dplyr)
 library(readr)
+library(yaml)
 
-data.dir <- " ../data_LAND"
+config <- read_yaml("config.yaml")
 
 # Reading in the Airbnb file
-listings <- read_csv(file.path(data.dir, "listings_chch_codes.csv"))
+listings <- read_rds(file.path(config$out.dir, "listings_chch_codes.rds"))
 # Reading in Joined data 
-joined_data <- read_csv(file.path(data.dir, "joined_airbnb_tenancy.csv"))
+joined_data <- read_rds(file.path(config$out.dir, "joined_airbnb_tenancy.rds"))
 # Filtering only by Chch central (code 326600)
 chch_central <- listings %>% filter(sa2_code == 326600)
 # Calculating median using median function
@@ -21,7 +22,7 @@ median(chch_central$price, na.rm = TRUE)
 # We defined short term as airbnb and long term as tenancy because majority of airbnb data (>94%) is <28 days. 
 
 # Reading in the 'geographic-areas-table-2023' 
-geo <- read_csv(file.path(data.dir, "geographic-areas-table-2023.csv")) %>%
+geo <- read_rds(file.path(config$out.dir, "geographic-areas-table-2023.rds")) %>%
   select(SA22023_code, SA22023_name, SA32023_code, SA32023_name) %>%
   distinct(SA22023_code, .keep_all = TRUE) %>%
   mutate(SA22023_code = as.character(SA22023_code),

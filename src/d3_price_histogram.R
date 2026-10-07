@@ -1,9 +1,11 @@
 library(ggplot2)
 library(readr)
+library(yaml)
 
+config <- read_yaml("config.yaml")
 
 # Load concatenated Christchurch dataset
-df <- read_csv("../data_LAND/listings_chch.csv")
+df <- read_rds(file.path(config$out_dir, "../data_LAND/listings_chch.rds"))
 
 # Remove missing prices
 df_clean <- df[!is.na(df$price), ]

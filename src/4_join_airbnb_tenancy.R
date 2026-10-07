@@ -4,13 +4,15 @@ library(readr)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(arrow)
+library(yaml)
 
-data.dir <- "../data_LAND"
+config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
-airbnb <- read_csv(file.path(data.dir, "listings_chch_codes.csv"))
-tenancy <- read_csv(file.path(data.dir, "tenancy_cleaned.csv"))
+airbnb <- read_parquet(file.path(config$out_dir, "airbnb_chch_codes.parquet"))
+tenancy <- read_rds(file.path(config$out_dir, "tenancy_cleaned.rds"))
 
-tenancy$`Median Rent` <- as.numeric(tenancy$`Median Rent`)
+# tenancy$`Median Rent` <- as.numeric(tenancy$`Median Rent`)
 
 # Ensure SA2 code is the same type for joining
 airbnb$sa2_code <- as.character(airbnb$sa2_code) 
@@ -55,7 +57,7 @@ LEFT JOIN tenancy t
 
 joined_data <- dbGetQuery(con, sql_join)
 
-write.csv(joined_data, file.path(data.dir, "joined_airbnb_tenancy.csv"), row.names = FALSE)
+write_rds(joined_data, file.path(config$out_dir, "joined_airbnb_tenancy.rds"))
 
 dbDisconnect(con)
 
