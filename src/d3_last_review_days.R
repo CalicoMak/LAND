@@ -5,46 +5,30 @@ library(readr)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(yaml)
 
-# Reading in the concatenated chch .csv
-airbnb <- read_csv("../data_LAND/listings_chch.csv")
+config <- read_yaml("config.yaml")
 
-# Filtering columns to keep only id, name, last_review
+# Reading in the concatenated chch .rds
+airbnb <- read_rds(file.path(config$out_dir, "listings_chch.rds"))
+
+# Build the scrape date lookup directly from the config.
+# Each scrape date is keyed by the month it falls in ("YYYY-MM"),
+# which is what the timeframe column represents.
+scrape_dates <- tibble(
+  scrape_date = ymd(unlist(config$scrape_dates))
+) %>%
+  mutate(timeframe = format(scrape_date, "%Y-%m"))
+
+# Keep only id, name, last_review, timeframe
 review_data <- airbnb %>%
-  select(id, name, last_review, month_year)
+  select(id, name, last_review, timeframe)
 
-# Changing 'last_review' string to Date (YYYY-MM-DD)
+# Convert last_review to Date (YYYY-MM-DD), join the scrape date on
+# timeframe, and calculate days since last review
 review_data <- review_data %>%
-  mutate(last_review = ymd(last_review))
-
-
-scrape_lookup <- tibble(
-  month_year = c(
-    "October 2025", 
-    "November 2025", 
-    "December 2025", 
-    "January 2026", 
-    "February 2026", 
-    "March 2026", 
-    "April 2026", 
-    "May 2026", 
-    "June 2026"
-    ), 
-  scrape_date = as.Date(c(
-    "2025-10-05", 
-    "2025-11-25", 
-    "2025-12-11", 
-    "2026-01-16", 
-    "2026-02-13", 
-    "2026-03-17", 
-    "2026-04-16", 
-    "2026-05-23", 
-    "2026-06-19"
-    ))
-  )
-
-review_data <- review_data %>% 
-  left_join(scrape_lookup, by = "month_year") %>% 
+  mutate(last_review = ymd(last_review)) %>%
+  left_join(scrape_dates, by = "timeframe") %>%
   mutate(
     days_since_last_review = as.numeric(scrape_date - last_review)
   )
