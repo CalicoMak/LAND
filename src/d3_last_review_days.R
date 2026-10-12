@@ -7,7 +7,7 @@ library(lubridate)
 library(ggplot2)
 library(yaml)
 
-config <- read_yaml("config.yaml")
+config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
 # Reading in the concatenated chch .rds
 airbnb <- read_rds(file.path(config$out_dir, "listings_chch.rds"))
@@ -18,7 +18,7 @@ airbnb <- read_rds(file.path(config$out_dir, "listings_chch.rds"))
 scrape_dates <- tibble(
   scrape_date = ymd(unlist(config$scrape_dates))
 ) %>%
-  mutate(timeframe = format(scrape_date, "%Y-%m"))
+  mutate(timeframe = floor_date(scrape_date, "month"))
 
 # Keep only id, name, last_review, timeframe
 review_data <- airbnb %>%
@@ -38,13 +38,13 @@ review_data <- review_data %>%
   filter(!is.na(days_since_last_review), days_since_last_review >= 0)
 
 # Creating total histogram
-ggplot(review_data, aes(x = days_since_last_review)) +
-  geom_histogram(binwidth = 30, color = "white") +
-  labs(
-    title = "Distribution of Days Since Last Review",
-    x = "Days Since Last Review",
-    y = "Number of Listings"
-  )
+# ggplot(review_data, aes(x = days_since_last_review)) +
+#   geom_histogram(binwidth = 30, color = "white") +
+#   labs(
+#     title = "Distribution of Days Since Last Review",
+#     x = "Days Since Last Review",
+#     y = "Number of Listings"
+#   )
 
 # Filtering to keep only listings reviewed in the last 360 days
 review_data_recent <- review_data %>%
@@ -58,3 +58,5 @@ ggplot(review_data_recent, aes(x = days_since_last_review)) +
     x = "Days Since Last Review",
     y = "Number of Listings"
   )
+
+ggsave(file.path(config$out_dir, "d3_last_review_days.png"))

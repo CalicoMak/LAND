@@ -1,9 +1,13 @@
 library(dplyr)
 library(ggplot2)
 library(scales)
+library(readr)
+library(yaml)
+
+config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
 # Read joined data
-joined <- read.csv("../data_LAND/joined_airbnb_tenancy.csv")
+joined <- read_rds(file.path(config$out_dir, "joined_airbnb_tenancy.rds"))
 
 # Make sure variables have the correct types
 joined <- joined %>%
@@ -111,3 +115,5 @@ ggplot(
     strip.text = element_text(face = "bold"),
     axis.text.y = element_text(size = 8)
   )
+
+ggsave(file.path(config$out_dir, "d5_airbnb_rentals_location_comparison.png"))

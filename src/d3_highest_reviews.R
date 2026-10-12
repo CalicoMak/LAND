@@ -3,7 +3,7 @@ library(dplyr)
 library(ggplot2)
 library(yaml)
 
-config <- read_yaml("config.yaml")
+config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
 most_reviews <- read_rds(file.path(config$out_dir,"listings_chch.rds")) %>%
   slice_max(order_by = number_of_reviews, prop = 0.1)
@@ -27,3 +27,5 @@ ggplot(most_reviews, aes(x = price)) +
     y = "Count"
   ) +
   theme_minimal()
+
+ggsave(file.path(config$out_dir, "d3_highest_reviews.png"))
