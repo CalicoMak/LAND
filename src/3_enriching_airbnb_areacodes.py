@@ -6,6 +6,7 @@ import requests
 from concurrent.futures import ThreadPoolExecutor
 import threading
 import time
+import sys
 
 
 with open('config.yaml', 'r') as config_file:
@@ -53,12 +54,37 @@ def find_area_code(lon_lat):
     return area_code
 
 
-pairs = list(zip(airbnb_chch.longitude, airbnb_chch.latitude))
+# 1. Extract unique coordinate pairs to avoid redundant API requests
+unique_pairs_df = airbnb_chch[['longitude', 'latitude']].drop_duplicates().reset_index(drop=True)
+pairs = list(zip(unique_pairs_df.longitude, unique_pairs_df.latitude))
+
+# 2. Setup thread-safe counter and progress tracking
+completed = 0
+total = len(pairs)
+progress_lock = threading.Lock()
+
+def find_area_code_with_progress(lon_lat):
+    global completed
+    code = find_area_code(lon_lat)
+    with progress_lock:
+        completed += 1
+        percent = (completed / total) * 100
+        sys.stdout.write(f"\rProgress: {percent:.1f}% ({completed}/{total})")
+        sys.stdout.flush()
+    return code
+
+print(f"Querying API for {total} unique locations (out of {len(airbnb_chch)} total rows)...")
 with ThreadPoolExecutor(max_workers=config['api_max_workers']) as executor:
-    results = list(executor.map(find_area_code, pairs))
+    results = list(executor.map(find_area_code_with_progress, pairs))
 
+print() # Move to a new line once progress completes
 
-airbnb_chch['sa2_code'] = results
-airbnb_chch['sa2_code'] = airbnb_chch['sa2_code'].astype(int)
+unique_pairs_df['sa2_code'] = results
+
+# 3. Join the results back to the main dataframe based on coordinates
+airbnb_chch = airbnb_chch.merge(unique_pairs_df, on=['longitude', 'latitude'], how='left')
+
+# Using nullable integer type 'Int64' in case any lookups returned None (prevents errors)
+airbnb_chch['sa2_code'] = airbnb_chch['sa2_code'].astype('Int64')
 
 airbnb_chch.to_parquet(OUT_DIR / 'airbnb_chch_codes.parquet', index=False)

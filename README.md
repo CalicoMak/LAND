@@ -7,6 +7,32 @@ Nico Perry\
 Lucious Pinto\
 Alyssa Thompson
 
+## Installation
+
+### R
+
+`renv::restore()`
+
+### Python
+
+Install Python 3.13.1 from the website, then
+
+`renv::use_python(python = "C:/path/to/python3.13.1/python.exe")`
+
+`renv::restore()`
+
+### Make
+
+Running Powershell as administrator:
+
+- Install Chocolatey from link on website, then
+
+- `choco install make`
+
+- Test that it worked: `make --version`
+
+Restart RStudio and run `make` in the terminal
+
 ## AirBnB Dataset
 
 ### Source
@@ -17,7 +43,7 @@ Licence: Creative Commons Attribution 4.0 International License (CC BY)
 ### Columns
 
 | Name | Meaning |
-|------------------------------------|------------------------------------|
+|----|----|
 | `id` | Airbnb's unique identifier for the listing |
 | `name` | Name of the listing |
 | `host_id` | Airbnb's unique identifier for the host/user |
@@ -58,7 +84,7 @@ Licence: Creative Commons Attribution 3.0 New Zealand License (CC BY)
 ### Columns
 
 | Name | Meaning |
-|------------------------------------|------------------------------------|
+|----|----|
 | `TimeFrame` | Starting day of the quarter to the bond data were collected |
 | `Location Id` | SA2-2019 ID from Stats NZ |
 | `Dwelling Type` | ALL \| [ Apartment \| Boarding House \| Flat \| House \| Room ] |
