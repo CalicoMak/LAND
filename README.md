@@ -11,18 +11,18 @@ Alyssa Thompson
 
 ### Source
 
-AirBnB listings scraped and made available by InsideAirBnB. Data from New Zealand in the 9 months before 19 June 2026. Under Public Domain and to the extent possible under law, InsideAirBnB creator Murray Cox has waived all copyright and related or neighboring rights to Inside Airbnb Data. This work is published from: United States.\
+AirBnB listings scraped and made available by InsideAirBnB. Data from New Zealand in the 9 months before 19 June 2026. Under Public Domain and to the extent possible under law, InsideAirBnB creator Murray Cox has waived all copyright and related or neighbouring rights to Inside Airbnb Data. This work is published from: United States.\
 Licence: Creative Commons Attribution 4.0 International License (CC BY)
 
 ### Columns
 
 | Name | Meaning |
-|----|----|
+|------------------------------------|------------------------------------|
 | `id` | Airbnb's unique identifier for the listing |
 | `name` | Name of the listing |
 | `host_id` | Airbnb's unique identifier for the host/user |
 | `host_name` | Name of the host. Usually just the first name(s). |
-| `neighbourhood_group` | The neighbourhood group as geocoded using the latitude and longitude against neighborhoods as defined by open or public digital shapefiles. Territorial Authority in NZ. |
+| `neighbourhood_group` | The neighbourhood group as geocoded using the latitude and longitude against neighbourhoods as defined by open or public digital shapefiles. Territorial Authority in NZ. |
 | `neighbourhood` | No description. Assumed to be suburb. |
 | `latitude` | Uses the World Geodetic System (WGS84) projection for latitude and longitude. |
 | `longitude` | Uses the World Geodetic System (WGS84) projection for latitude and longitude. |
@@ -58,7 +58,7 @@ Licence: Creative Commons Attribution 3.0 New Zealand License (CC BY)
 ### Columns
 
 | Name | Meaning |
-|----|----|
+|------------------------------------|------------------------------------|
 | `TimeFrame` | Starting day of the quarter to the bond data were collected |
 | `Location Id` | SA2-2019 ID from Stats NZ |
 | `Dwelling Type` | ALL \| [ Apartment \| Boarding House \| Flat \| House \| Room ] |
@@ -77,11 +77,10 @@ Licence: Creative Commons Attribution 3.0 New Zealand License (CC BY)
 #### Rows Retained
 
 - `TimeFrame` between `2025-10-01` and `2026-04-01`, i.e. the three quarters that align with the AirBnB data.
-- `Dwelling Type` that is not `ALL`; no aggregation along `Dwelling Type` as this column will be retained.
+- `Dwelling Type` that is `ALL`; only aggregation along `Dwelling Type` as this column will be removed. Also removes `NA` entries, which are unquantified values that overlap with `ALL`.
 - `Number of Beds` that is `ALL`; only aggregation along `Number of Beds` as this column will be removed. Also removes `NA` entries, which are unquantified values that overlap with `ALL`.
-
-Note: As `ALL` indicates aggregation, keeping both actual values and `ALL` would result in double-counting bonds.
 
 #### Columns Dropped
 
 - `Number of Beds`: AirBnB dataset has no equivalent so no comparison can be made.
+- `Dwelling Type`: Want to only have one entry per (quarter, SA2) combination, to make join easier.
