@@ -2,10 +2,10 @@ library(ggplot2)
 library(readr)
 library(yaml)
 
-config <- read_yaml("config.yaml")
+config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
 # Load concatenated Christchurch dataset
-df <- read_rds(file.path(config$out_dir, "../data_LAND/listings_chch.rds"))
+df <- read_rds(file.path(config$out_dir, "listings_chch.rds"))
 
 # Remove missing prices
 df_clean <- df[!is.na(df$price), ]
@@ -24,5 +24,4 @@ ggplot(df_clean, aes(x = price)) +
        x = "price", y = "count") +
   theme_minimal()
 
-
-
+ggsave(file.path(config$out_dir, "d3_price_distribution.png"))

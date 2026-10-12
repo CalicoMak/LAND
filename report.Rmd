@@ -1,0 +1,45 @@
+---
+title: "Airbnb and rental analysis, Christchurch"
+output:
+  html_document:
+    toc: true
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Listings
+
+### Highest reviews
+```{r}
+knitr::include_graphics("out/d3_highest_reviews.png")
+```
+
+### Days since last review
+```{r}
+knitr::include_graphics("out/d3_last_review_days.png")
+```
+
+### Price distribution
+```{r}
+knitr::include_graphics("out/d3_price_distribution.png")
+```
+
+## Airbnb vs rentals
+
+### Location comparison
+```{r}
+knitr::include_graphics("out/d5_airbnb_rentals_location_comparison.png")
+```
+
+### Rental price gap by SA2
+```{r}
+knitr::kable(readRDS("out/gap_sa2.rds"))
+```
+
+### Rental price gap by SA3
+```{r}
+knitr::kable(readRDS("out/gap_sa3.rds"))
+```
