@@ -42,7 +42,7 @@ $(OUT)/tenancy_cleaned.rds: $(SRC)/2_cleaning_tenancy.R $(DATA)/Detailed-Quarter
 	$(RSCRIPT) $<
 
 # Step 3: add area codes (slow)
-$(OUT)/airbnb_chch_codes.parquet: $(SRC)/3_enriching_airbnb_areacodes_nonapi.py $(OUT)/listings_chch_cleaned.parquet $(DATA)/statistical-area-2-2019-generalised.gpkg $(CONFIG) | $(OUT)
+$(OUT)/airbnb_chch_codes.parquet: $(SRC)/3_enriching_airbnb_areacodes.py $(OUT)/listings_chch_cleaned.parquet $(CONFIG) | $(OUT)
 	$(PYTHON) $<
 
 # Step 4: join Airbnb and tenancy
