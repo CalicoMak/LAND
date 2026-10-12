@@ -17,11 +17,12 @@ IQR_val <- Q3 - Q1
 df_clean <- df_clean[df_clean$price >= Q1 - 1.5 * IQR_val & 
                        df_clean$price <= Q3 + 1.5 * IQR_val, ]
 
-# Christchurch histogram
+# Christchurch histogram (density on y-axis)
 ggplot(df_clean, aes(x = price)) +
-  geom_histogram(fill = "#7B7FC4", color = "white", bins = 40) +
+  geom_histogram(aes(y = after_stat(density)),
+                 fill = "#7B7FC4", color = "white", bins = 40) +
   labs(title = "Distribution of price for Airbnb Christchurch",
-       x = "price", y = "count") +
+       x = "price", y = "density") +
   theme_minimal()
 
 ggsave(file.path(config$out_dir, "d3_price_distribution.png"))
