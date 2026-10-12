@@ -6,10 +6,10 @@ library(yaml)
 
 config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
-# Read joined data
+# Reading in the joined data
 joined <- read_rds(file.path(config$out_dir, "joined_airbnb_tenancy.rds"))
 
-# Make sure variables have the correct types
+# Making sure the variables have the correct types
 joined <- joined %>%
   mutate(
     quarter = as.Date(quarter),
@@ -19,10 +19,7 @@ joined <- joined %>%
   )
 
 
-# ---------------------------------------------------------
-# 1. Count UNIQUE Airbnb listings per quarter + SA2
-# ---------------------------------------------------------
-
+# Counting unique Airbnb listings per quarter + SA2
 airbnb_counts <- joined %>%
   distinct(quarter, sa2_code, a_id) %>%
   group_by(quarter, sa2_code) %>%
@@ -31,11 +28,7 @@ airbnb_counts <- joined %>%
     .groups = "drop"
   )
 
-
-# ---------------------------------------------------------
-# 2. Get ONE active-bond value per quarter + SA2
-# ---------------------------------------------------------
-
+# Getting one active-bond value per quarter & SA2
 tenancy_counts <- joined %>%
   select(
     quarter,
@@ -49,33 +42,21 @@ tenancy_counts <- joined %>%
     .groups = "drop"
   )
 
-
-# ---------------------------------------------------------
-# 3. Join Airbnb and tenancy counts
-# ---------------------------------------------------------
-
+# Joining Airbnb and Tenancy counts
 rental_comparison <- airbnb_counts %>%
   left_join(
     tenancy_counts,
     by = c("quarter", "sa2_code")
   )
 
-
-# ---------------------------------------------------------
-# 4. Calculate Airbnb listings as % of active bonds
-# ---------------------------------------------------------
-
+# Calculating Airbnb listing as percent of active bonds
 rental_comparison <- rental_comparison %>%
   mutate(
     airbnb_percent_of_active_bonds =
       (airbnb_listings / active_bonds) * 100
   )
 
-
-# ---------------------------------------------------------
-# 5. Select the top 15 SA2s in each quarter
-# ---------------------------------------------------------
-
+# Selecting the top 15 SA2s in each quarter
 top_areas <- rental_comparison %>%
   filter(!is.na(airbnb_percent_of_active_bonds)) %>%
   group_by(quarter) %>%
@@ -86,11 +67,7 @@ top_areas <- rental_comparison %>%
   ) %>%
   ungroup()
 
-
-# ---------------------------------------------------------
-# 6. Make the graph
-# ---------------------------------------------------------
-
+# Making the graph with ggplot
 ggplot(
   top_areas,
   aes(
@@ -116,4 +93,5 @@ ggplot(
     axis.text.y = element_text(size = 8)
   )
 
+# Saving as png
 ggsave(file.path(config$out_dir, "d5_airbnb_rentals_location_comparison.png"))
