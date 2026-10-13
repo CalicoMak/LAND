@@ -9,7 +9,9 @@ suppressPackageStartupMessages({
 config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
 # Reading in the joined data
-joined <- read_rds(file.path(config$out_dir, "joined_airbnb_tenancy.rds"))
+joined <- read_rds(
+  file.path(config$out_dir, "joined_airbnb_tenancy.rds")
+)
 
 # Making sure the variables have the correct types
 joined <- joined %>%
@@ -19,7 +21,6 @@ joined <- joined %>%
     sa2_code = as.character(sa2_code),
     a_id = as.character(a_id)
   )
-
 
 # Counting unique Airbnb listings per quarter + SA2
 airbnb_counts <- joined %>%
@@ -44,56 +45,103 @@ tenancy_counts <- joined %>%
     .groups = "drop"
   )
 
-# Joining Airbnb and Tenancy counts
+# Joining Airbnb and tenancy counts
 rental_comparison <- airbnb_counts %>%
   left_join(
     tenancy_counts,
     by = c("quarter", "sa2_code")
   )
 
-# Calculating Airbnb listing as percent of active bonds
+# Calculating active rental bonds per Airbnb listing
 rental_comparison <- rental_comparison %>%
   mutate(
-    airbnb_percent_of_active_bonds =
-      (airbnb_listings / active_bonds) * 100
+    active_bonds_per_airbnb =
+      active_bonds / airbnb_listings
   )
 
 # Selecting the top 15 SA2s in each quarter
 top_areas <- rental_comparison %>%
-  filter(!is.na(airbnb_percent_of_active_bonds)) %>%
+  filter(
+    !is.na(active_bonds_per_airbnb),
+    is.finite(active_bonds_per_airbnb)
+  ) %>%
   group_by(quarter) %>%
   slice_max(
-    order_by = airbnb_percent_of_active_bonds,
+    order_by = active_bonds_per_airbnb,
     n = 15,
     with_ties = FALSE
   ) %>%
   ungroup()
 
-# Making the graph with ggplot
+# Keep all SA2 observations with valid counts
+plot_data <- rental_comparison %>%
+  filter(
+    !is.na(active_bonds),
+    !is.na(airbnb_listings),
+    active_bonds > 0,
+    airbnb_listings > 0
+  ) %>%
+  mutate(
+    more_airbnb = airbnb_listings > active_bonds
+  )
+
+# Scatter plot comparing Airbnb listings and active bonds
 location_comparison <- ggplot(
-  top_areas,
+  plot_data,
   aes(
-    x = reorder(sa2_code, airbnb_percent_of_active_bonds),
-    y = airbnb_percent_of_active_bonds
+    x = active_bonds,
+    y = airbnb_listings
   )
 ) +
-  geom_col() +
-  coord_flip() +
-  facet_wrap(~ quarter, scales = "free_y") +
-  labs(
-    title = "Airbnb listings relative to active rental bonds",
-    subtitle = "Top 15 SA2 areas in each quarter",
-    x = "SA2 code",
-    y = "Airbnb listings as % of active bonds"
+  geom_abline(
+    slope = 1,
+    intercept = 0,
+    linetype = "dashed",
+    colour = "grey40"
   ) +
-  scale_y_continuous(
-    labels = label_percent(scale = 1)
+  geom_point(
+    aes(colour = more_airbnb),
+    alpha = 0.8,
+    size = 2
+  ) +
+  facet_wrap(~ quarter) +
+  scale_x_log10(
+    labels = scales::label_comma()
+  ) +
+  scale_y_log10(
+    labels = scales::label_comma()
+  ) +
+  scale_colour_manual(
+    values = c(
+      "FALSE" = "steelblue",
+      "TRUE" = "firebrick"
+    ),
+    labels = c(
+      "FALSE" = "More active bonds",
+      "TRUE" = "More Airbnb listings"
+    ),
+    name = "Comparison"
+  ) +
+  labs(
+    title = "Airbnb listings compared with active rental bonds",
+    subtitle = "All SA2 areas by quarter; dashed line indicates equal counts",
+    x = "Active rental bonds (log scale)",
+    y = "Airbnb listings (log scale)"
   ) +
   theme_minimal() +
   theme(
     strip.text = element_text(face = "bold"),
-    axis.text.y = element_text(size = 8)
+    legend.position = "bottom"
   )
 
-# Saving as png
-ggsave(file.path(config$out_dir, "d5_airbnb_rentals_location_comparison.png"), location_comparison)
+# Save plot
+ggsave(
+  file.path(
+    config$out_dir,
+    "d5_airbnb_rentals_location_comparison.png"
+  ),
+  plot = location_comparison,
+  width = 12,
+  height = 8,
+  dpi = 300
+)
