@@ -16,16 +16,19 @@ knitr::opts_chunk$set(echo = FALSE)
 ```{r}
 knitr::include_graphics("out/d3_highest_reviews.png")
 ```
+**Figure 1. Price distribution of listings that are within the top 10% of review count.** Price per night on the x axis is right skewed.
 
 ### Days since last review
 ```{r}
 knitr::include_graphics("out/d3_last_review_days.png")
 ```
+**Figure 2. Distribution showing number of days since the Airbnb last received a review.** The number of Airbnbs under each time frame can be seen on the y axis. 360 days covered.
 
 ### Price distribution
 ```{r}
 knitr::include_graphics("out/d3_price_distribution.png")
 ```
+**Figure 3. Price distrabution of Christchurch Airbnbs.** Sorted via density at each price. Outliers have been removed.
 
 ## Airbnb vs rentals
 
@@ -33,6 +36,9 @@ knitr::include_graphics("out/d3_price_distribution.png")
 ```{r}
 knitr::include_graphics("out/d5_airbnb_rentals_location_comparison.png")
 ```
+**Figure 4. Comparison of Airbnb listings and active rental bonds across Christchurch SA2 areas by quarter.** The dashed line indicates equal numbers of Airbnb listings and active rental bonds, with points above the line representing areas where Airbnb listings outnumber active bonds. Both axes use logarithmic scales to facilitate comparison across areas of different sizes.
+
+**Table 1. Median nightly Airbnb price in Christchurch Central.** Grouped by the 326600 SA2 code as well as the number of listings under that code.
 
 ## Median Airbnb price
 ```{r median-price, echo=FALSE}
@@ -42,10 +48,14 @@ knitr::kable(median_price,
              digits = 0)
 ```
 
+**Table 2. differences in rental price between short and long term rentals grouped by SA2 area codes.** Holmwood has the largest median gap of $215.7 between short and long term rentals.
+
 ### Rental price gap by SA2
 ```{r}
 knitr::kable(readRDS("out/gap_sa2.rds"))
 ```
+
+**Table 3. differences in rental price between short and long term rentals grouped by SA3 area code.** Clifton-Sumner has the largest median gap of $171.4 between short and long term rentals.
 
 ### Rental price gap by SA3
 ```{r}
