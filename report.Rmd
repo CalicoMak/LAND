@@ -36,7 +36,7 @@ knitr::include_graphics("out/d5_airbnb_rentals_location_comparison.png")
 
 ## Median Airbnb price
 ```{r median-price, echo=FALSE}
-median_price <- readRDS(file.path(config$out_dir, "median_price_chch_central.rds"))
+median_price <- readRDS("out/median_price_chch_central.rds")
 knitr::kable(median_price,
              col.names = c("Area", "SA2 code", "Median nightly price ($)", "Listings"),
              digits = 0)

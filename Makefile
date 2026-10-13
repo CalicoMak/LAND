@@ -14,7 +14,8 @@ PLOTS := $(OUT)/d3_highest_reviews.png \
          $(OUT)/d3_price_distribution.png \
          $(OUT)/d5_airbnb_rentals_location_comparison.png
 
-GAPS := $(OUT)/gap_sa2.rds \
+GAPS := $(OUT)/median_price_chch_central.rds \
+				$(OUT)/gap_sa2.rds \
         $(OUT)/gap_sa3.rds
 
 REPORT := $(OUT)/report.html
@@ -57,8 +58,8 @@ $(OUT)/d3_%.png: $(SRC)/d3_%.R $(OUT)/listings_chch.rds $(CONFIG) | $(OUT)
 $(OUT)/d5_%.png: $(SRC)/d5_%.R $(OUT)/joined_airbnb_tenancy.rds $(CONFIG) | $(OUT)
 	$(RSCRIPT) $<
 
-# d5 gap tables (two outputs from one run)
-$(OUT)/gap_sa2.rds $(OUT)/gap_sa3.rds &: $(SRC)/d5_rental_price_gap.R $(OUT)/joined_airbnb_tenancy.rds $(CONFIG) | $(OUT)
+# d5 gap tables (three outputs from one run)
+$(OUT)/median_price_chch_central.rds $(OUT)/gap_sa2.rds $(OUT)/gap_sa3.rds &: $(SRC)/d5_rental_price_gap.R $(OUT)/joined_airbnb_tenancy.rds $(CONFIG) | $(OUT)
 	$(RSCRIPT) $<
 
 # Report: rebuilds when the Rmd, any plot or any table changes

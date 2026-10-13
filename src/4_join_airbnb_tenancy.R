@@ -1,11 +1,13 @@
-library(DBI)
-library(RSQLite)
-library(readr)
-library(dplyr)
-library(lubridate)
-library(ggplot2)
-library(arrow)
-library(yaml)
+suppressPackageStartupMessages({
+  library(DBI)
+  library(RSQLite)
+  library(readr)
+  library(dplyr)
+  library(lubridate)
+  library(ggplot2)
+  library(arrow)
+  library(yaml)
+})
 
 config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
@@ -60,6 +62,3 @@ joined_data <- dbGetQuery(con, sql_join)
 write_rds(joined_data, file.path(config$out_dir, "joined_airbnb_tenancy.rds"))
 
 dbDisconnect(con)
-
-nrow(airbnb)
-nrow(joined_data)

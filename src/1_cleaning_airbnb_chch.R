@@ -1,8 +1,10 @@
-library(readr)
-library(dplyr)
-library(lubridate)
-library(arrow)
-library(yaml)
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(lubridate)
+  library(arrow)
+  library(yaml)
+})
 
 config <- read_yaml("config.yaml", readLines.warn = FALSE)
 

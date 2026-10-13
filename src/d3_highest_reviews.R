@@ -1,7 +1,9 @@
-library(readr)
-library(dplyr)
-library(ggplot2)
-library(yaml)
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(ggplot2)
+  library(yaml)
+})
 
 config <- read_yaml("config.yaml", readLines.warn = FALSE)
 

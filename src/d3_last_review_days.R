@@ -1,11 +1,10 @@
-# Calculating and plotting how long ago the last review was (days) 
-
-# Installing necessary libraries.
-library(readr)
-library(dplyr)
-library(lubridate)
-library(ggplot2)
-library(yaml)
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(lubridate)
+  library(ggplot2)
+  library(yaml)
+})
 
 config <- read_yaml("config.yaml", readLines.warn = FALSE)
 

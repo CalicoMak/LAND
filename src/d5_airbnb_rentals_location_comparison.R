@@ -1,8 +1,10 @@
-library(dplyr)
-library(ggplot2)
-library(scales)
-library(readr)
-library(yaml)
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(ggplot2)
+  library(scales)
+  library(readr)
+  library(yaml)
+})
 
 config <- read_yaml("config.yaml", readLines.warn = FALSE)
 

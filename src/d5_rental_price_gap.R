@@ -1,11 +1,12 @@
-
-# Calculating median Airbnb price 
-
-library(dplyr)
-library(readr)
-library(yaml)
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(readr)
+  library(yaml)
+})
 
 config <- read_yaml("config.yaml", readLines.warn = FALSE)
+
+joined <- read_rds(file.path(config$out_dir, "joined_airbnb_tenancy.rds"))
 
 # Median nightly Airbnb price, Christchurch Central (SA2 326600)
 chch_central <- joined %>% filter(sa2_code == 326600)
@@ -91,4 +92,3 @@ saveRDS(gap_sa3, file.path(config$out_dir, "gap_sa3.rds"))
 
 # Finding the largest gap over both sa2 and sa3
 gap_sa2 %>% slice_max(median_gap, n = 1)
-# Holmwood by ~210
