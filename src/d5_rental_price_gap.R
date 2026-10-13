@@ -18,7 +18,6 @@ median_price <- tibble::tibble(
   n_listings = sum(!is.na(chch_central$a_nightlyprice))
 )
 
-median_price
 saveRDS(median_price, file.path(config$out_dir, "median_price_chch_central.rds"))
 
 
@@ -68,10 +67,6 @@ merged <- joined %>%
   filter(!is.na(gap)) %>%
   left_join(geo, by = "sa2_code")
 
-# Checking that there are no more na's
-sum(is.na(merged$SA22023_name))
-sum(is.na(merged$SA32023_name))
-
 # SA2-level (suburb) gap, named, n >= 20 to avoid noise (SA2 to get a neighbourhood level of aggregation)
 gap_sa2 <- merged %>%
   group_by(sa2_code, SA22023_name) %>%
@@ -85,10 +80,5 @@ gap_sa3 <- merged %>%
   summarise(median_gap = median(gap), n = n(), iqr = IQR(gap), .groups = "drop") %>%
   arrange(desc(median_gap))
 
-gap_sa2
 saveRDS(gap_sa2, file.path(config$out_dir, "gap_sa2.rds"))
-gap_sa3
 saveRDS(gap_sa3, file.path(config$out_dir, "gap_sa3.rds"))
-
-# Finding the largest gap over both sa2 and sa3
-gap_sa2 %>% slice_max(median_gap, n = 1)

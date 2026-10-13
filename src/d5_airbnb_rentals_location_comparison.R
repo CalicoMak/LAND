@@ -70,7 +70,7 @@ top_areas <- rental_comparison %>%
   ungroup()
 
 # Making the graph with ggplot
-ggplot(
+location_comparison <- ggplot(
   top_areas,
   aes(
     x = reorder(sa2_code, airbnb_percent_of_active_bonds),
@@ -96,4 +96,4 @@ ggplot(
   )
 
 # Saving as png
-ggsave(file.path(config$out_dir, "d5_airbnb_rentals_location_comparison.png"))
+ggsave(file.path(config$out_dir, "d5_airbnb_rentals_location_comparison.png"), location_comparison)

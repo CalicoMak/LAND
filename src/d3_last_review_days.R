@@ -36,21 +36,12 @@ review_data <- review_data %>%
 review_data <- review_data %>%
   filter(!is.na(days_since_last_review), days_since_last_review >= 0)
 
-# Creating total histogram
-# ggplot(review_data, aes(x = days_since_last_review)) +
-#   geom_histogram(binwidth = 30, color = "white") +
-#   labs(
-#     title = "Distribution of Days Since Last Review",
-#     x = "Days Since Last Review",
-#     y = "Number of Listings"
-#   )
-
 # Filtering to keep only listings reviewed in the last 360 days
 review_data_recent <- review_data %>%
   filter(days_since_last_review <= 360)
 
 # Create histogram for the last 360 days
-ggplot(review_data_recent, aes(x = days_since_last_review)) +
+last_review_days <- ggplot(review_data_recent, aes(x = days_since_last_review)) +
   geom_histogram(binwidth = 15, color = "white") +
   labs(
     title = "Distribution of Days Since Last Review (Last 360 Days)",
@@ -58,4 +49,4 @@ ggplot(review_data_recent, aes(x = days_since_last_review)) +
     y = "Number of Listings"
   )
 
-ggsave(file.path(config$out_dir, "d3_last_review_days.png"))
+ggsave(file.path(config$out_dir, "d3_last_review_days.png"), last_review_days)

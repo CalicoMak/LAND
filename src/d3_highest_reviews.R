@@ -7,7 +7,7 @@ suppressPackageStartupMessages({
 
 config <- read_yaml("config.yaml", readLines.warn = FALSE)
 
-most_reviews <- read_rds(file.path(config$out_dir,"listings_chch.rds")) %>%
+most_reviews <- read_rds(file.path(config$out_dir, "listings_chch.rds")) %>%
   slice_max(order_by = number_of_reviews, prop = 0.1)
 
 summary_top <- most_reviews %>%
@@ -18,10 +18,8 @@ summary_top <- most_reviews %>%
     max_num_reviews = max(number_of_reviews, na.rm = TRUE),
   )
 
-print(summary_top)
 
-
-ggplot(most_reviews, aes(x = price)) +
+highest_reviews <- ggplot(most_reviews, aes(x = price)) +
   geom_histogram(bins = 50, fill = "steelblue", color = "white", alpha = 0.8) +
   labs(
     title = "Price Distribution of top 10% listings by review count in Christchurch",
@@ -30,4 +28,4 @@ ggplot(most_reviews, aes(x = price)) +
   ) +
   theme_minimal()
 
-ggsave(file.path(config$out_dir, "d3_highest_reviews.png"))
+ggsave(file.path(config$out_dir, "d3_highest_reviews.png"), highest_reviews)
