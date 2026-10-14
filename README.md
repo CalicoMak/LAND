@@ -33,6 +33,18 @@ Running Powershell as administrator:
 
 Restart RStudio and run `make` in the terminal
 
+## Input Data
+
+The input data must be in the folder `data_LAND`, located in the parent folder of the repository.
+
+### Filenames
+
+**AirBnB:** `listings_YYYY-MM.csv`
+
+**Quarterly Rental Bond:** `Detailed-Quarterly-Tenancy-Q1-2020-Q3-2026.csv`
+
+**Geographic Areas Table 2023:** `geographic-areas-table-2023.csv`
+
 ## AirBnB Dataset
 
 ### Source
